@@ -80,18 +80,19 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 entity = {
                     'PartitionKey': vnet.name,
                     'RowKey': subnet.name,
-                    'VnetName': vnet.name,
-                    'SubnetName': subnet.name,
-                    'AddressPrefix': subnet.address_prefix,
-                    'ResourceGroup': resource_group_name,
-                    'Location': vnet.location,
-                    'Timestamp': datetime.utcnow().isoformat(),
-                    'VnetId': vnet.id,
-                    'SubnetId': subnet.id,
-                    'VnetType': vnet.type,
-                    'SubnetType': subnet.type,
-                    'VnetAddressSpace': vnet.address_space.address_prefixes[0] if vnet.address_space and vnet.address_space.address_prefixes else ""
+                    'vnetName': vnet.name,
+                    'subnetName': subnet.name,
+                    'addressPrefix': subnet.address_prefix,
+                    'resourceGroup': resource_group_name,
+                    'location': vnet.location,
+                    'timestamp': datetime.utcnow().isoformat(),
+                    'vnetId': vnet.id,
+                    'subnetId': subnet.id,
+                    'vnetType': vnet.type,
+                    'subnetType': subnet.type,
+                    'vnetAddressSpace': vnet.address_space.address_prefixes[0] if vnet.address_space and vnet.address_space.address_prefixes else ""
                 }
+                logging.debug(f"Attempting to write entity: {entity}")
                 
                 try:
                     # Try to update first
