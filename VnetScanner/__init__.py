@@ -42,8 +42,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         for vnet in vnets:
             logging.info(f"Processing VNet: {vnet.name}")
             
+            # Extract resource group name from VNet ID
+            resource_group_name = vnet.id.split('/')[4] # Assuming ID format /subscriptions/subid/resourceGroups/rgname/...
+            
             # Get subnets for this VNet
-            subnets = network_client.subnets.list(vnet.resource_group, vnet.name)
+            subnets = network_client.subnets.list(resource_group_name, vnet.name)
             
             # Create entity for each subnet
             for subnet in subnets:
@@ -53,7 +56,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                     'VnetName': vnet.name,
                     'SubnetName': subnet.name,
                     'AddressPrefix': subnet.address_prefix,
-                    'ResourceGroup': vnet.resource_group,
+                    'ResourceGroup': resource_group_name,
                     'Location': vnet.location,
                     'Timestamp': datetime.utcnow().isoformat()
                 }
