@@ -88,8 +88,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                     'timestamp': datetime.utcnow().isoformat(),
                     'vnetId': vnet.id,
                     'subnetId': subnet.id,
-                    'vnetType': vnet.type,
-                    'subnetType': subnet.type,
                     'vnetAddressSpace': vnet.address_space.address_prefixes[0] if vnet.address_space and vnet.address_space.address_prefixes else ""
                 }
                 logging.debug(f"Attempting to write entity: {entity}")
