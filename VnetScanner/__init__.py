@@ -6,8 +6,8 @@ from azure.mgmt.network import NetworkManagementClient
 from azure.data.tables import TableServiceClient
 from datetime import datetime
 
-def main(mytimer: func.TimerRequest) -> None:
-    logging.info('Python timer trigger function processed a request.')
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger function processed a request.')
 
     # Get environment variables
     subscription_id = os.environ["AZURE_SUBSCRIPTION_ID"]
@@ -71,6 +71,14 @@ def main(mytimer: func.TimerRequest) -> None:
                     else:
                         logging.error(f"Error processing subnet {subnet.name}: {str(e)}")
 
+        return func.HttpResponse(
+            "VNet and Subnet scan completed successfully.",
+            status_code=200
+        )
+
     except Exception as e:
         logging.error(f"Error in function execution: {str(e)}")
-        raise
+        return func.HttpResponse(
+             f"Error: {str(e)}",
+             status_code=500
+        )
