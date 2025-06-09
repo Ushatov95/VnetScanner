@@ -12,7 +12,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # Get environment variables
     subscription_id = os.environ["AZURE_SUBSCRIPTION_ID"]
     storage_account_name = os.environ["STORAGE_ACCOUNT_NAME"]
-    storage_account_key = os.environ["STORAGE_ACCOUNT_KEY"]
     table_name = os.environ["STORAGE_TABLE_NAME"]
 
     try:
