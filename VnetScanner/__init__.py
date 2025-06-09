@@ -23,7 +23,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         
         # Initialize Table Service Client
         table_service = TableServiceClient(
-            account_url=f"https://{storage_account_name}.table.core.windows.net",
+            endpoint=f"https://{storage_account_name}.table.core.windows.net",
             credential=credential
         )
         
