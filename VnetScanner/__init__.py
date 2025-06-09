@@ -23,6 +23,20 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # Initialize Azure credentials
         credential = DefaultAzureCredential()
         logging.info("DefaultAzureCredential initialized.")
+
+        # Get token to check its scope
+        # The scope for Table Storage is generally 'https://storage.azure.com/.default'
+        # Or more specific: 'https://<storageaccountname>.table.core.windows.net/.default'
+        # We will try the general storage scope first.
+        try:
+            token = credential.get_token("https://storage.azure.com/.default")
+            logging.debug(f"Managed Identity token acquired for scope https://storage.azure.com/.default: {token.token[:10]}...{token.token[-10:]} (truncated) expires {token.expires_on}")
+        except Exception as e:
+            logging.error(f"Failed to acquire token for storage scope: {str(e)}")
+            return func.HttpResponse(
+                 f"Error acquiring storage token: {str(e)}",
+                 status_code=500
+            )
         
         # Initialize Network Management Client
         network_client = NetworkManagementClient(credential, subscription_id)
@@ -79,7 +93,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                     table_client.update_entity(entity)
                     logging.info(f"Updated entity for subnet {subnet.name} in VNet {vnet.name}")
                 except Exception as e:
-                    if "ResourceNotFound" in str(e) or "The specified entity does not exist" in str(e): # Handle specific error for non-existent entity
+                    if "ResourceNotFound" in str(e) or "The specified entity does not exist" in str(e):
                         # If entity doesn't exist, create it
                         logging.info(f"Entity for subnet {subnet.name} in VNet {vnet.name} not found, attempting to create.")
                         table_client.create_entity(entity)
