@@ -79,12 +79,18 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             for subnet in subnets:
                 entity = {
                     'PartitionKey': vnet.name,
-                    'RowKey': subnet.name,'VnetName': vnet.name,
+                    'RowKey': subnet.name,
+                    'VnetName': vnet.name,
                     'SubnetName': subnet.name,
                     'AddressPrefix': subnet.address_prefix,
                     'ResourceGroup': resource_group_name,
                     'Location': vnet.location,
-                    'Timestamp': datetime.utcnow().isoformat()
+                    'Timestamp': datetime.utcnow().isoformat(),
+                    'VnetId': vnet.id,
+                    'SubnetId': subnet.id,
+                    'VnetType': vnet.type,
+                    'SubnetType': subnet.type,
+                    'VnetAddressSpace': vnet.address_space.address_prefixes[0] if vnet.address_space and vnet.address_space.address_prefixes else ""
                 }
                 
                 try:
